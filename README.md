@@ -96,3 +96,38 @@ The handler function will receive 3 arguments:
 If the promise returned by the handler resolve, a 200 response will be sent and the resolved object will be transformed into JSON and send in the response body.
 
 The rest of the implementation is up to you: create your models, repositories, whatever you want/need...
+
+## Request validation
+
+An action can have a `validation` property that is an object describing the request validation. The action handler does not have access to the request object. Instead, it only has access to validated data.
+
+So if you want to get data from the request, you must validate it:
+
+```javascript
+// An action
+
+const NotNullValidator = require("vinorcolium/validator/NotNullValidator")
+
+{
+    path: "/some/uri/with/:aParam/and/:anotherParam",
+    method: "post",
+    validation: {
+        aParam: [],
+        title: [
+            NotNullValidator("Some error message to display back in the response body in case the validator fail."),
+            MinLengthValidator(3, "Title must be at least 3 characters long.")
+        ],
+    },
+    handler: data => {
+        // data has 2 properties: "aParam" and "title".
+    },
+}
+```
+ 
+Data can come as a URL param or in the request body as JSON object. URL parameters have priority over body parameters.
+
+In the example above, the data object in the handler will have 2 properties: `aParam` (coming from the URL) and `title` (coming from the request body). Those properties have pass all the validators. If a validator fails, the handler is never called. An error is sent back to the response instead.
+
+Note that the `anotherParam` from the URL is not validated, so it will not appear in the data object. The same will apply for any extra parameters in the request body: as long as you do not mention the param in the validation object, it will not be extracted from the request. If you just need to extract a value without validating it, you must provide an empty array like we did for the `aParam` parameter.
+
+

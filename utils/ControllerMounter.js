@@ -63,7 +63,7 @@ const mountAction = (router, action) => {
         let validations = []
         if (action.validation) {
             for (let attribute in action.validation) {
-                data[attribute] = request.body[attribute]
+                data[attribute] = request.params[attribute] || request.body[attribute]
                 for (let validation of action.validation[attribute]) {
                     validations.push(validation(request.body[attribute]))
                 }
