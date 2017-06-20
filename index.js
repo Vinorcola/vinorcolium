@@ -8,6 +8,8 @@ const AccessDeniedError = require("./error/AccessDeniedError")
 const NotFoundError = require("./error/NotFoundError")
 const authenticationMiddleware = require("./utils/AuthenticationMiddleware")
 const mountController = require("./utils/ControllerMounter")
+const requestLoggerMiddleware = require("./utils/RequestLoggerMiddleware")
+const timestampRequestMiddleware = require("./utils/TimestampRequestMiddleware")
 
 
 
@@ -17,16 +19,27 @@ module.exports = {
      * Create a vinorcolium app.
      *
      * @param options {
-     *     authTokenHeaderName: string [OPTIONAL],
-     *     controllerPath: string,
+     *     authTokenHeaderName: string [OPTIONAL]
+     *     controllerPath: string
      *     logger: Logger instance only used in development mode [OPTIONAL]
-     *     secret: string,
+     *     noTimestamp: bool [OPTIONAL] Disable request timestamp if set to true
+     *     secret: string
      * }
      */
     createApp(options) {
 
         // Create express app.
         let app = express()
+
+        // Timestamp request.
+        if (options.noTimestamp !== true) {
+            app.use(timestampRequestMiddleware)
+        }
+
+        // Attach logger to request.
+        if (options.logger) {
+            app.use(requestLoggerMiddleware(options.logger))
+        }
 
         // Body parser middleware.
         app.use(bodyParser.json())
@@ -58,6 +71,16 @@ module.exports = {
                     responseContent.error.missingAuthorization = error.missingAuthorization
                 }
                 responseContent.error.stack = error.stack
+
+                // Log error
+                let logger = request.logger || options.logger
+                if (logger) {
+                    if (error.httpStatus && error.httpStatus >= 400 && error.httpStatus < 500) {
+                        logger.warn(error)
+                    } else {
+                        logger.error(error)
+                    }
+                }
             }
 
             response.status(error.httpStatus || 500)
