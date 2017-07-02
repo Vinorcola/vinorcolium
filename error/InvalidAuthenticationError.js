@@ -8,6 +8,6 @@ module.exports = class InvalidAuthenticationError extends Error {
         super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "InvalidAuthenticationError"
-        this.httpStatus = 401
+        this.status = 401
     }
 }

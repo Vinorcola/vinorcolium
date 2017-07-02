@@ -8,6 +8,6 @@ module.exports = class NotFoundError extends Error {
         super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "NotFoundError"
-        this.httpStatus = 404
+        this.status = 404
     }
 }

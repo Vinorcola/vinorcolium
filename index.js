@@ -75,7 +75,7 @@ module.exports = {
                 // Log error
                 let logger = request.logger || options.logger
                 if (logger) {
-                    if (error.httpStatus && error.httpStatus >= 400 && error.httpStatus < 500) {
+                    if (error.status && error.status >= 400 && error.status < 500) {
                         logger.warn(error)
                     } else {
                         logger.error(error)
@@ -83,7 +83,7 @@ module.exports = {
                 }
             }
 
-            response.status(error.httpStatus || 500)
+            response.status(error.status || 500)
             response.json(responseContent)
         })
 

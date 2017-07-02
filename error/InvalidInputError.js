@@ -8,6 +8,6 @@ module.exports = class InvalidInputError extends Error {
         super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "InvalidInputError"
-        this.httpStatus = 422
+        this.status = 422
     }
 }

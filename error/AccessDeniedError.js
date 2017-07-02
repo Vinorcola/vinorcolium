@@ -8,7 +8,7 @@ module.exports = class AccessDeniedError extends Error {
         super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "AccessDeniedError"
-        this.httpStatus = 403
+        this.status = 403
         this.missingAuthorization = missingAuthorization
     }
 }

@@ -8,6 +8,6 @@ module.exports = class BadCredentialsError extends Error {
         super("Bad credentials.")
         Error.captureStackTrace(this, this.constructor)
         this.name = "BadCredentialsError"
-        this.httpStatus = 400
+        this.status = 400
     }
 }
