@@ -13,7 +13,7 @@ const InvalidInputError = require("../error/InvalidInputError")
  * @param message
  */
 module.exports = message => subject => new Promise((resolve, reject) => {
-    if (subject === null ||subject === undefined) {
+    if (subject === null || subject === undefined) {
         resolve()
     } else if (subject !== "" && validator.isEmail(subject)) {
         resolve()

@@ -1,6 +1,8 @@
 
 "use strict"
 
+const AuthTokenModel = require("../model/AuthTokenModel")
+
 
 
 /**
@@ -8,12 +10,12 @@
  *
  * The user object will to attached to the request object as "userAccount" property.
  *
- * @param secret
- * @param authTokenHeaderName
+ * @param secret              {string}
+ * @param authTokenHeaderName {string|null}
  * @returns {function(*, *, *=)}
  */
 module.exports = (secret, authTokenHeaderName = "x-auth-token") => {
-    const authTokenModel = require("../model/AuthTokenModel")(secret)
+    const authTokenModel = AuthTokenModel(secret)
 
     return (request, response, next) => {
         if (request.headers[authTokenHeaderName] !== undefined) {

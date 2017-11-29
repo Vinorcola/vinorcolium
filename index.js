@@ -16,15 +16,14 @@ const timestampRequestMiddleware = require("./utils/TimestampRequestMiddleware")
 module.exports = {
 
     /**
-     * Create a vinorcolium app.
+     * Create a Vinorcolium app.
      *
-     * @param options {
-     *     authTokenHeaderName: string [OPTIONAL]
-     *     controllerPath: string
-     *     logger: Logger instance only used in development mode [OPTIONAL]
-     *     noTimestamp: bool [OPTIONAL] Disable request timestamp if set to true
-     *     secret: string
-     * }
+     * @param options                     {object}
+     * @param options.authTokenHeaderName {string|null} The HTTP header's name for authenticating the user.
+     * @param options.controllerPath      {string}      The path to the controller's directory.
+     * @param options.logger              {object|null} Logger instance only used in development mode.
+     * @param options.noTimestamp         {bool|null}   Disable request timestamp if set to true.
+     * @param options.secret              {string}      The secret used for authentication encryption.
      */
     createApp(options) {
 
