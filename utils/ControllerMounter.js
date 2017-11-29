@@ -1,7 +1,6 @@
 
 "use strict"
 
-const express = require("express")
 const fs = require("fs")
 const path = require("path")
 
@@ -22,7 +21,7 @@ const fetchControllers = (app, directoryPath, logger) => {
         let filePath = directoryPath + path.sep + file
         let fileStats = fs.lstatSync(filePath)
         if (fileStats.isDirectory()) {
-            fetchControllers(filePath)
+            fetchControllers(app, filePath, logger)
         } else if (file.substr(-13) === "Controller.js") {
             let requirePath = filePath.substr(0, filePath.length - 3)
             mountController(app, require(requirePath), logger)
