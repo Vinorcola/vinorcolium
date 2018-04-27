@@ -3,8 +3,10 @@
 
 
 
-module.exports = class AccessDeniedError extends Error {
-    constructor(message, missingAuthorization) {
+class AccessDeniedError extends Error {
+
+    constructor(message = "Access denied.", missingAuthorization = null) {
+
         super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "AccessDeniedError"
@@ -12,3 +14,5 @@ module.exports = class AccessDeniedError extends Error {
         this.missingAuthorization = missingAuthorization
     }
 }
+
+module.exports = AccessDeniedError

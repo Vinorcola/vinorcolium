@@ -3,11 +3,15 @@
 
 
 
-module.exports = class BadCredentialsError extends Error {
-    constructor() {
-        super("Bad credentials.")
+class BadCredentialsError extends Error {
+
+    constructor(message = "Bad credentials.") {
+
+        super(message)
         Error.captureStackTrace(this, this.constructor)
         this.name = "BadCredentialsError"
         this.status = 400
     }
 }
+
+module.exports = BadCredentialsError
