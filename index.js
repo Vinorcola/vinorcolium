@@ -18,17 +18,31 @@ module.exports = {
     /**
      * Create a Vinorcolium app.
      *
-     * @param options                     {object}
-     * @param options.authTokenHeaderName {string|null} The HTTP header's name for authenticating the user.
-     * @param options.controllerPath      {string}      The path to the controller's directory.
-     * @param options.logger              {object|null} Logger instance only used in development mode.
-     * @param options.noTimestamp         {bool|null}   Disable request timestamp if set to true.
-     * @param options.secret              {string}      The secret used for authentication encryption.
+     * @param {object}       options
+     * @param {string|null}  options.authTokenHeaderName The HTTP header's name for authenticating the user.
+     * @param {string}       options.controllerPath      The path to the controller's directory.
+     * @param {object|null}  options.logger              Logger instance only used in development mode.
+     * @param {boolean|null} options.noTimestamp         Disable request timestamp if set to true.
+     * @param {string}       options.secret              The secret used for authentication encryption.
+     * @param {object[]}     options.static              Options for static mount points.
+     * @param {string}       options.static[].path       The path to the directory to mount.
+     * @param {string|null}  options.static[].prefix     The prefix to apply to URL mount point.
      */
     createApp(options) {
 
         // Create express app.
         let app = express()
+
+        // Setup static mount points.
+        if (options.static) {
+            options.static.forEach((staticPoint) => {
+                if (staticPoint.prefix) {
+                    app.use(prefix, express.static(staticPoint.path))
+                } else {
+                    app.use(express.static(staticPoint.path))
+                }
+            })
+        }
 
         // Timestamp request.
         if (options.noTimestamp !== true) {
