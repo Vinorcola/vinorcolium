@@ -6,17 +6,31 @@ const InvalidInputError = require("../error/InvalidInputError")
 
 
 /**
- * Check that a number value is equal or bellow the given threshold.
+ * Check that the subject is bellow the given threshold.
  *
- * @param threshold
- * @param message
+ * This validator assume the subject is a number. You must use either NumberValidator or IntegerValidator before this validator.
+ *
+ * @param {number}  threshold
+ * @param {string}  message
+ * @param {boolean} strict
  */
-module.exports = (threshold, message) => subject => new Promise((resolve, reject) => {
-    if (subject === null || subject === undefined) {
-        resolve()
-    } else if (subject <= threshold) {
-        resolve()
-    } else {
-        reject(new InvalidInputError(message))
+module.exports = (threshold, message, strict = false) => (
+
+    async (subject) => {
+
+        // Ignore null and undefined.
+        if (subject === null || subject === undefined) {
+            return subject
+        }
+
+        // Check that the subject is bellow the threshold.
+        if (strict ?
+            subject < threshold :
+            subject <= threshold
+        ) {
+            return subject
+        }
+
+        throw new InvalidInputError(message)
     }
-})
+)

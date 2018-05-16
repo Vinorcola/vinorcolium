@@ -6,16 +6,24 @@ const InvalidInputError = require("../error/InvalidInputError")
 
 
 /**
- * Validate the subject as an array.
+ * Check that the subject is an array.
  *
- * @param message
+ * @param {string} message
  */
-module.exports = message => subject => new Promise((resolve, reject) => {
-    if (subject === null || subject === undefined) {
-        resolve()
-    } else if (typeof subject === "object" && subject instanceof Array) {
-        resolve()
-    } else {
-        reject(new InvalidInputError(message))
+module.exports = (message) => (
+
+    async (subject) => {
+
+        // Ignore null and undefined.
+        if (subject === null || subject === undefined) {
+            return subject
+        }
+
+        // Check that subject is an array.
+        if (typeof subject === "object" && subject instanceof Array) {
+            return subject
+        }
+
+        throw new InvalidInputError(message)
     }
-})
+)

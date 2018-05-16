@@ -4,27 +4,42 @@
 
 
 /**
- * Validate each element of an array.
+ * Run validations on each element of the subject.
  *
- * This validator assume an array is passed. Please use ArrayValidator before this validator.
+ * This validator assume the subject is an array. You must use ArrayValidator before this validator.
  *
- * @param properties
+ * @param {Validator[]} validations
  */
-module.exports = properties => subject => new Promise((resolve, reject) => {
-    if (subject === null || subject === undefined) {
-        resolve()
-    } else {
-        let validations = []
-        subject.forEach(element => {
-            Object.keys(properties).forEach(property => {
-                properties[property].forEach(validation => {
-                    validations.push(validation(element))
-                })
+module.exports = (validations) => (
+
+    async (subject) => {
+
+        // Ignore null and undefined.
+        if (subject === null || subject === undefined) {
+            return subject
+        }
+
+        return validateElements(subject, validations)
+    }
+)
+
+const validateElements = (subject, validations) => (
+
+    new Promise((resolve, reject) => {
+        // Launch validation on each properties.
+        let promises = []
+        subject.forEach((element) => {
+
+            validations.forEach((validation) => {
+
+                promises.push(validation(element))
             })
         })
 
-        Promise.all(validations)
-            .then(resolve)
+        Promise.all(promises)
+            .then(() => {
+                resolve(subject)
+            })
             .catch(reject)
-    }
-})
+    })
+)

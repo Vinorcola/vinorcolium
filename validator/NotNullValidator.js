@@ -6,14 +6,19 @@ const InvalidInputError = require("../error/InvalidInputError")
 
 
 /**
- * Validate a not-null (or not-undefined) value.
+ * Check that the subject is neither `null` nor `undefined`.
  *
- * @param message
+ * @param {string} message
  */
-module.exports = message => subject => new Promise((resolve, reject) => {
-    if (subject !== null && subject !== undefined) {
-        resolve()
-    } else {
-        reject(new InvalidInputError(message))
+module.exports = (message) => (
+
+    async (subject) => {
+
+        // Check that subject is neither null nor undefined.
+        if (subject !== null && subject !== undefined) {
+            return subject
+        }
+
+        throw new InvalidInputError(message)
     }
-})
+)

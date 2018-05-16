@@ -5,10 +5,10 @@ const InvalidInputError = require("../error/InvalidInputError")
 
 
 
-let uuidRegex = /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/
+let dateRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(?::[0-9]{2})?(?:\.[0-9]{3}Z)?$/
 
 /**
- * Check that the subject is a uuid.
+ * Check that the subject is a date with time.
  *
  * @param {string} message
  */
@@ -21,9 +21,14 @@ module.exports = (message) => (
             return subject
         }
 
-        // Check that subject is a uuid.
-        if (typeof subject === "string" && subject.match(uuidRegex)) {
+        // Check that subject is a Date.
+        if (subject instanceof Date) {
             return subject
+        }
+
+        // Check that subject is a string containing a date.
+        if (typeof subject === "string" && subject.match(dateRegex)) {
+            return new Date(subject)
         }
 
         throw new InvalidInputError(message)

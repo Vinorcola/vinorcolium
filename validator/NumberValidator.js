@@ -8,18 +8,29 @@ const InvalidInputError = require("../error/InvalidInputError")
 let numberRegex = /^[0-9]+(\.[0-9]+)?$/
 
 /**
- * Validate a number value, may it be stored as a number or as a string.
+ * Check that the subject is a number.
  *
- * @param message
+ * @param {string} message
  */
-module.exports = message => subject => new Promise((resolve, reject) => {
-    if (subject === null || subject === undefined) {
-        resolve()
-    } else if (typeof subject === "number") {
-        resolve()
-    } else if (typeof subject === "string" && subject.match(numberRegex)) {
-        resolve()
-    } else {
-        reject(new InvalidInputError(message))
+module.exports = (message) => (
+
+    async (subject) => {
+
+        // Ignore null and undefined.
+        if (subject === null || subject === undefined) {
+            return subject
+        }
+
+        // Check that subject is a number.
+        if (typeof subject === "number") {
+            return subject
+        }
+
+        // Check that subject is a string containing a number.
+        if (typeof subject === "string" && subject.match(numberRegex)) {
+            return parseFloat(subject)
+        }
+
+        throw new InvalidInputError(message)
     }
-})
+)
