@@ -76,9 +76,10 @@ const mountController = (app, controller, logger) => {
 
                 // Send result to response.
                 .then(result => {
-                    response.json(Object.assign({
+                    response.json({
                         ok: true,
-                    }, result))
+                        data: result,
+                    })
                 })
 
                 // Catch any error.

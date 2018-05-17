@@ -37,7 +37,7 @@ module.exports = {
         if (options.static) {
             options.static.forEach((staticPoint) => {
                 if (staticPoint.prefix) {
-                    app.use(prefix, express.static(staticPoint.path))
+                    app.use(staticPoint.prefix, express.static(staticPoint.path))
                 } else {
                     app.use(express.static(staticPoint.path))
                 }
