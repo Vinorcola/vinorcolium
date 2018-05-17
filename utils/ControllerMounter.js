@@ -78,6 +78,7 @@ const mountController = (app, controller, logger) => {
                 .then(result => {
                     response.json({
                         ok: true,
+                        status: 200,
                         data: result,
                     })
                 })

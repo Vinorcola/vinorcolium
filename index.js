@@ -72,6 +72,7 @@ module.exports = {
         app.use((error, request, response, next) => {
             let responseContent = {
                 ok: false,
+                status: error.status || 500,
                 error: {
                     code: error.code,
                     message: error.message,
