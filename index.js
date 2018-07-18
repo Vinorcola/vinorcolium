@@ -18,20 +18,25 @@ module.exports = {
     /**
      * Create a Vinorcolium app.
      *
-     * @param {object}       options
-     * @param {string|null}  options.authTokenHeaderName The HTTP header's name for authenticating the user.
-     * @param {string}       options.controllerPath      The path to the controller's directory.
-     * @param {object|null}  options.logger              Logger instance only used in development mode.
-     * @param {boolean|null} options.noTimestamp         Disable request timestamp if set to true.
-     * @param {string}       options.secret              The secret used for authentication encryption.
-     * @param {object[]}     options.static              Options for static mount points.
-     * @param {string}       options.static[].path       The path to the directory to mount.
-     * @param {string|null}  options.static[].prefix     The prefix to apply to URL mount point.
+     * @param {object}        options
+     * @param {function|null} options.appPreConfiguration    A callback that will be called with the app as parameter before any configuration is done by the framework.
+     * @param {string|null}   options.authTokenHeaderName The HTTP header's name for authenticating the user.
+     * @param {string}        options.controllerPath      The path to the controller's directory.
+     * @param {object|null}   options.logger              Logger instance only used in development mode.
+     * @param {boolean|null}  options.noTimestamp         Disable request timestamp if set to true.
+     * @param {string}        options.secret              The secret used for authentication encryption.
+     * @param {object[]}      options.static              Options for static mount points.
+     * @param {string}        options.static[].path       The path to the directory to mount.
+     * @param {string|null}   options.static[].prefix     The prefix to apply to URL mount point.
      */
     createApp(options) {
 
         // Create express app.
         let app = express()
+
+        if (options.appPreConfiguration && typeof options.appPreConfiguration === "function") {
+            options.appPreConfiguration(app)
+        }
 
         // Setup static mount points.
         if (options.static) {

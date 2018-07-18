@@ -1,6 +1,6 @@
 {
   "name": "vinorcolium",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Probably a useless framework that doesn't worth your time ;)",
   "main": "index.js",
   "scripts": {
