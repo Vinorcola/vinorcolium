@@ -17,7 +17,7 @@ const InvalidAuthenticationError = require("../error/InvalidAuthenticationError"
  * @param logger
  */
 const fetchControllers = (app, directoryPath, logger) => {
-    fs.readdirSync(directoryPath).forEach(file => {
+    fs.readdirSync(directoryPath).forEach((file) => {
         let filePath = directoryPath + path.sep + file
         let fileStats = fs.lstatSync(filePath)
         if (fileStats.isDirectory()) {
@@ -30,7 +30,7 @@ const fetchControllers = (app, directoryPath, logger) => {
 }
 
 const mountController = (app, controller, logger) => {
-    controller.actions.map(action => {
+    controller.actions.map((action) => {
         let path = controller.prefix + action.path
         if (process.env.NODE_ENV === "development" && logger) {
             logger.info("Mount " + action.method.toUpperCase() + "\t" + (path === "" ? "/" : path))
@@ -71,16 +71,25 @@ const mountController = (app, controller, logger) => {
             }
             Promise.all(validations)
 
-                // Call action handler with validated data, and authenticated user account.
-                .then(() => action.handler(data, request.userAccount, request.logger))
+                // Call action handler with validated data, and extra data such as request, response, authenticated user account and logger.
+                .then(() => action.handler(data, {
+                    request,
+                    response,
+                    user: request.userAccount,
+                    logger: request.logger,
+                }))
 
                 // Send result to response.
-                .then(result => {
-                    response.json({
-                        ok: true,
-                        status: 200,
-                        data: result,
-                    })
+                .then((result) => {
+                    if (result === response) {
+                        response.send()
+                    } else {
+                        response.json({
+                            ok: true,
+                            status: 200,
+                            data: result,
+                        })
+                    }
                 })
 
                 // Catch any error.

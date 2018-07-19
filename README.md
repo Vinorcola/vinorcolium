@@ -58,7 +58,7 @@ module.exports = {
                     MinLengthValidator(3, "Title for the item must be at least 3 characters long."),
                 ],
             },
-            handler: data => {
+            handler(data) {
                 let item = {
                     id: generateUuid(),
                     title: data.title,
@@ -87,13 +87,16 @@ An action is an object having the following properties:
 * `validation`, an object representing the validation to apply to the request;
 * `handler`, an handler function that must return a promise.
 
-The handler function will receive 3 arguments:
+The handler function will receive 2 arguments:
 
 1. The data extracted and validated from the request;
-2. The user account object (if the user has been authenticated) or `undefined`;
-3. The logger.
+1. Some extra-data such as:
+    1. The `request` object, which is the Express request (avoid using request as much as possible. Use validation instead);
+    1. The `repsonse` object, which is the Express response (avoid using response as much as possible. Resolve object instead);
+    1. The `user` object that represent the authenticated user account (if the user has been authenticated, `undefined` otherwise);
+    1. The `logger` object.
 
-If the promise returned by the handler resolve, a 200 response will be sent and the resolved object will be transformed into JSON and send in the response body.
+If the promise returned by the handler resolve the response object, then this response will simply be sent. Otherwise, a 200 response will be sent and the resolved object will be transformed into JSON and send in the response body.
 
 The rest of the implementation is up to you: create your models, repositories, whatever you want/need...
 
@@ -118,16 +121,14 @@ const NotNullValidator = require("vinorcolium/validator/NotNullValidator")
             MinLengthValidator(3, "Title must be at least 3 characters long.")
         ],
     },
-    handler: data => {
-        // data has 2 properties: "aParam" and "title".
+    handler({ aParam, title }) {
+        // ...
     },
 }
 ```
  
 Data can come as a URL param or in the request body as JSON object. URL parameters have priority over body parameters.
 
-In the example above, the data object in the handler will have 2 properties: `aParam` (coming from the URL) and `title` (coming from the request body). Those properties have pass all the validators. If a validator fails, the handler is never called. An error is sent back to the response instead.
+In the example above, the first parameter object in the handler will have 2 properties: `aParam` (coming from the URL) and `title` (coming from the request body). Those properties have pass all the validators. If a validator fails, the handler is never called. An error is sent back to the response instead.
 
 Note that the `anotherParam` from the URL is not validated, so it will not appear in the data object. The same will apply for any extra parameters in the request body: as long as you do not mention the param in the validation object, it will not be extracted from the request. If you just need to extract a value without validating it, you must provide an empty array like we did for the `aParam` parameter.
-
-
