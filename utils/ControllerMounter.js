@@ -36,7 +36,7 @@ const mountController = (app, controller, logger) => {
             logger.info("Mount " + action.method.toUpperCase() + "\t" + (path === "" ? "/" : path))
         }
 
-        app[action.method.toLowerCase()](path, (request, response, next) => {
+        app[action.method.toLowerCase()](path, action.middleware || [], (request, response, next) => {
 
             // Run authorizations.
             if (action.authorization) {

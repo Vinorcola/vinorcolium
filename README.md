@@ -85,16 +85,17 @@ An action is an object having the following properties:
 * `method`, the HTTP method for the action;
 * `authorization`, a particular authorization the user must have in order to execute the action (optional: public action if no authorization required);
 * `validation`, an object representing the validation to apply to the request;
+* `middleware`, an array of specific middleware that will be called before the handler.
 * `handler`, an handler function that must return a promise.
 
 The handler function will receive 2 arguments:
 
 1. The data extracted and validated from the request;
 1. Some extra-data such as:
-    1. The `request` object, which is the Express request (avoid using request as much as possible. Use validation instead);
-    1. The `repsonse` object, which is the Express response (avoid using response as much as possible. Resolve object instead);
-    1. The `user` object that represent the authenticated user account (if the user has been authenticated, `undefined` otherwise);
-    1. The `logger` object.
+    * The `request` object, which is the Express request (avoid using request as much as possible. Use validation instead);
+    * The `repsonse` object, which is the Express response (avoid using response as much as possible. Resolve object instead);
+    * The `user` object that represent the authenticated user account (if the user has been authenticated, `undefined` otherwise);
+    * The `logger` object.
 
 If the promise returned by the handler resolve the response object, then this response will simply be sent. Otherwise, a 200 response will be sent and the resolved object will be transformed into JSON and send in the response body.
 
